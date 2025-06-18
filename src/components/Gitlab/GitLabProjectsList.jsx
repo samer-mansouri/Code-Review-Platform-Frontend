@@ -1,16 +1,23 @@
-import { useEffect, useState } from 'react';
-import { Table, Input, Tag, Spin, Button } from 'antd';
-import { SearchOutlined, PlusOutlined, SyncOutlined, EyeOutlined } from '@ant-design/icons';
-import gitlabProjectService from '../../services/gitlabProjectService';
-import AddGitLabProjectDrawer from './AddGitLabProjectDrawer';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Table, Input, Tag, Spin, Button } from "antd";
+import {
+  SearchOutlined,
+  PlusOutlined,
+  SyncOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import gitlabProjectService from "../../services/gitlabProjectService";
+import AddGitLabProjectDrawer from "./AddGitLabProjectDrawer";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Popconfirm } from "antd";
 
 const GitLabProjectsList = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState({});
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -36,11 +43,11 @@ const GitLabProjectsList = () => {
   const closeDrawer = () => setDrawerVisible(false);
 
   const handleNewProject = (newProject) => {
-    setProjects(prev => [newProject, ...prev]);
+    setProjects((prev) => [newProject, ...prev]);
   };
 
   const handleSync = async (projectId) => {
-    setSyncing(prev => ({ ...prev, [projectId]: true }));
+    setSyncing((prev) => ({ ...prev, [projectId]: true }));
     try {
       await gitlabProjectService.sync(projectId);
       toast.success("Synchronisation terminée !");
@@ -48,57 +55,73 @@ const GitLabProjectsList = () => {
       toast.error("Échec de la synchronisation.");
       console.error(err);
     } finally {
-      setSyncing(prev => ({ ...prev, [projectId]: false }));
+      setSyncing((prev) => ({ ...prev, [projectId]: false }));
     }
   };
 
-  const filteredProjects = projects.filter(project =>
-    Object.values(project).some(value =>
+  const handleDelete = async (projectId) => {
+    try {
+      await gitlabProjectService.delete(projectId);
+      toast.success("Projet supprimé avec succès");
+      setProjects((prev) => prev.filter((proj) => proj.id !== projectId));
+    } catch (err) {
+      toast.error("Erreur lors de la suppression du projet");
+      console.error(err);
+    }
+  };
+
+  const filteredProjects = projects.filter((project) =>
+    Object.values(project).some((value) =>
       String(value).toLowerCase().includes(searchText.toLowerCase())
     )
   );
 
   const columns = [
     {
-      title: 'Nom',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Nom",
+      dataIndex: "name",
+      key: "name",
       render: (text, record) => (
-        <a onClick={() => navigate(`/gitlab/projects/${record.id}`)} className="text-blue-600 hover:underline">
+        <a
+          onClick={() => navigate(`/gitlab/projects/${record.id}`)}
+          className="text-blue-600 hover:underline"
+        >
           {text}
         </a>
       ),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Namespace',
-      dataIndex: 'path_with_namespace',
-      key: 'path_with_namespace',
+      title: "Namespace",
+      dataIndex: "path_with_namespace",
+      key: "path_with_namespace",
     },
     {
-      title: 'Web URL',
-      dataIndex: 'web_url',
-      key: 'web_url',
+      title: "Web URL",
+      dataIndex: "web_url",
+      key: "web_url",
       render: (url) => (
-        <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {url}
+        </a>
       ),
     },
     {
-      title: 'Créé le',
-      dataIndex: 'created_at',
-      key: 'created_at',
+      title: "Créé le",
+      dataIndex: "created_at",
+      key: "created_at",
       render: (date) => new Date(date).toLocaleString(),
       sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     },
     {
-      title: 'Token ID',
-      dataIndex: 'token_id',
-      key: 'token_id',
+      title: "Token ID",
+      dataIndex: "token_id",
+      key: "token_id",
       render: (id) => <Tag>{id}</Tag>,
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
         <div className="flex gap-2">
           <Button
@@ -114,9 +137,20 @@ const GitLabProjectsList = () => {
           >
             Voir
           </Button>
+          <Popconfirm
+            title="Confirmer la suppression ?"
+            description="Ce projet et toutes ses données associées seront supprimés."
+            onConfirm={() => handleDelete(record.id)}
+            okText="Oui"
+            cancelText="Non"
+          >
+            <Button danger icon={<DeleteOutlined />}>
+              Supprimer
+            </Button>
+          </Popconfirm>
         </div>
       ),
-    }
+    },
   ];
 
   return (

@@ -2,116 +2,92 @@ import { Form, Input, Button, Card } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import authService from "../services/authService";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginPage = () => {
-  // Handle form submission
-
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const onFinish = (values) => {
-    console.log("Form Submitted:", values);
-
     setLoading(true);
+    authService
+      .login(values.email, values.password)
+      .then((response) => {
+        const { user } = response;
 
-    authService.login(values.email, values.password).then(
-      (response) => {
-        console.log("Login Success:", response);
-
-
-        
-
-
-
-        // Save the token in local storage
+        // Stockage en localStorage
         localStorage.setItem("access", response.access_token);
         localStorage.setItem("refresh", response.refresh_token);
-        localStorage.setItem("first_name", response.user.first_name);
-        localStorage.setItem("last_name", response.user.last_name);
-        localStorage.setItem("email", response.user.email);
-        localStorage.setItem("id", response.user.id);
+        localStorage.setItem("first_name", user.first_name);
+        localStorage.setItem("last_name", user.last_name);
+        localStorage.setItem("email", user.email);
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("role", user.role);
 
-        navigate("/users");
-        // Redirect to the dashboard
-        // window.location.href = "/dashboard";
-      },
-      (error) => {
-        console.error("Login Error:", error);
-      }, 
-    ).catch((error) => {
-      console.error("Login Error:", error);
-    }).finally(() => {
-      setLoading(false);
-    });
-
+        // Redirection selon le rôle
+        if (user.role === "developer") {
+          navigate("/tokens");
+        } else if (user.role === "admin") {
+          navigate("/stats");
+        } else {
+          navigate("/unauthorized");
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur de connexion :", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <Card className="w-full max-w-md shadow-lg p-8 bg-white rounded-md">
-        <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">Connexion</h1>
         <Form
           name="login_form"
           initialValues={{ remember: true }}
           onFinish={onFinish}
-          layout="vertical" // better layout for input labels
+          layout="vertical"
         >
-          {/* Email field */}
           <Form.Item
-            label="Email"
+            label="Adresse email"
             name="email"
             rules={[
-              {
-                type: "email",
-                message: "The input is not valid E-mail!",
-              },
-              {
-                required: true,
-                message: "Please input your E-mail!",
-              },
+              { type: "email", message: "Adresse email invalide !" },
+              { required: true, message: "Veuillez entrer votre adresse email !" },
             ]}
           >
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
+            <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
 
-          {/* Password field */}
           <Form.Item
-            label="Password"
+            label="Mot de passe"
             name="password"
             rules={[
-              {
-                required: true,
-                message: "Please input your Password!",
-              },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters long",
-              },
+              { required: true, message: "Veuillez entrer votre mot de passe !" },
+              { min: 6, message: "Le mot de passe doit contenir au moins 6 caractères" },
             ]}
           >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-            />
+            <Input.Password prefix={<LockOutlined />} placeholder="Mot de passe" />
           </Form.Item>
 
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
-              className="login-form-button w-full"
+              className="w-full"
               loading={loading}
             >
-              Log in
+              Se connecter
             </Button>
           </Form.Item>
         </Form>
+
+        <p className="text-center mt-4">
+          Vous n'avez pas de compte ? <Link to="/register">Créer un compte</Link>
+        </p>
       </Card>
     </div>
   );

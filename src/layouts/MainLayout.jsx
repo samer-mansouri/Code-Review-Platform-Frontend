@@ -5,10 +5,10 @@ import {  Avatar, Breadcrumb, Dropdown, Layout, Menu } from 'antd';
 // import profilePic from '../assets/profile-pic.webp';
 import MenuComponent from '../components/Menu/MenuComponent';
 import { menuItems } from '../routes/routes';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import avatar from '../assets/avatar.png';
-import {  LogoutOutlined } from '@ant-design/icons';
+import {  LogoutOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -24,6 +24,7 @@ const MainLayout = ({ children }) => {
     const [breadCrumb, setBreadCrumb] = useState([]);
 
     const location = useLocation();
+    const Navigate = useNavigate();
 
     const extractBreadCrumb = (menuItems) => {
         const path = window.location.pathname;
@@ -84,13 +85,22 @@ const MainLayout = ({ children }) => {
     <Dropdown
         overlay={
             <Menu>
-                <Menu.Item>
-                    <a 
-                        icon={<LogoutOutlined />}
-                        onClick={logout}
-                    >Logout</a>
-                </Menu.Item>
-            </Menu>
+  <Menu.Item
+    key="profile"
+    icon={<UserOutlined />} // 👤 Profile icon
+    onClick={() => Navigate("/profile")}
+  >
+    Profile
+  </Menu.Item>
+
+  <Menu.Item
+    key="logout"
+    icon={<LogoutOutlined />} // 🚪 Logout icon
+    onClick={logout}
+  >
+    Déconnexion
+  </Menu.Item>
+</Menu>
         }
         trigger={['click']}
 >

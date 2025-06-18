@@ -31,25 +31,45 @@ const gitlabProjectService = {
     }
   },
 
+  // Sync a GitLab project
   sync: async (projectId) => {
     try {
-      const res = await axiosInstance.post(
-        `/api/gitlab-project/${projectId}/sync`
-      );
+      const res = await axiosInstance.post(`/api/gitlab-project/${projectId}/sync`);
       return res.data;
     } catch (err) {
       return Promise.reject(err);
     }
   },
 
+  // Get merge requests for a project
   getMergeRequests: async (projectId) => {
-  return axiosInstance.get(`/api/gitlab-merge-requests/${projectId}/merge-requests`).then(res => res.data);
-},
+    try {
+      const res = await axiosInstance.get(`/api/gitlab-merge-requests/${projectId}/merge-requests`);
+      return res.data;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 
-getMergeRequestDetails: async (projectId, iid) => {
-  return axiosInstance.get(`/api/gitlab-merge-requests/${projectId}/merge-request/${iid}`).then(res => res.data);
-}
+  // Get details of a specific merge request
+  getMergeRequestDetails: async (projectId, iid) => {
+    try {
+      const res = await axiosInstance.get(`/api/gitlab-merge-requests/${projectId}/merge-request/${iid}`);
+      return res.data;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
 
+  // ✅ Delete GitLab project (including MRs and commits)
+  delete: async (projectId) => {
+    try {
+      const res = await axiosInstance.delete(`/api/gitlab-project/${projectId}`);
+      return res.data;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
 };
 
 export default gitlabProjectService;

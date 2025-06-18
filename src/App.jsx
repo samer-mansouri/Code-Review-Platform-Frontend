@@ -1,26 +1,20 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import UsersList from "./components/Users/UsersList";
-import LoginPage from "./pages/LoginPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
-import UserDetails from "./components/Users/UserDetails";
-import TokenManager from "./components/Tokens/TokenManager";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import { protectedRoutes } from "./routes/routeConfig";
+import RoleGuard from "./guards/RoleGuard";
+import UnauthorizedPage from "./pages/UnauthorizedPage";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import GitLabProjectsList from "./components/Gitlab/GitLabProjectsList";
-import GitLabProjectDetails from "./components/Gitlab/GitLabProjectDetails";
-import GitLabMergeRequestDetails from "./components/Gitlab/GitLabMergeRequestDetails";
-import GitHubReposList from "./components/Github/GitHubReposList";
-import GitHubRepoDetails from "./components/Github/GitHubRepoDetails";
-import GitHubPRDetails from "./components/Github/GitHubPRDetails";
 
 const App = () => {
   return (
     <>
       <Router>
         <Routes>
-          {/* Public route for login page */}
+          {/* Public routes */}
           <Route
             path="/"
             element={
@@ -29,91 +23,35 @@ const App = () => {
               </PublicRoute>
             }
           />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
 
-          {/* Protected routes */}
+          {/* Unauthorized must be public */}
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+          {/* Protected routes under layout */}
           <Route element={<MainLayout />}>
-            <Route
-              path="/users"
-              element={
-                <ProtectedRoute>
-                  <UsersList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/users/:id"
-              element={
-                <ProtectedRoute>
-                  <UserDetails />
-                </ProtectedRoute>
-              }
-            />
+            {protectedRoutes.map(({ path, element: Component, roles }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <ProtectedRoute>
+                    <RoleGuard allowedRoles={roles}>
+                      <Component />
+                    </RoleGuard>
+                  </ProtectedRoute>
+                }
+              />
+            ))}
 
-            <Route
-              path="/tokens"
-              element={
-                <ProtectedRoute>
-                  <TokenManager />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/gitlab"
-              element={
-                <ProtectedRoute>
-                  <GitLabProjectsList />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-      path="/gitlab/projects/:projectId"
-      element={
-        <ProtectedRoute>
-          <GitLabProjectDetails />
-        </ProtectedRoute>
-      }
-    />
-    <Route
-      path="/gitlab/projects/:projectId/mr/:mrIid"
-      element={
-        <ProtectedRoute>
-          <GitLabMergeRequestDetails />
-        </ProtectedRoute>
-      }
-    />
-
-    <Route
-          path="/github"
-          element={
-            <ProtectedRoute>
-              <GitHubReposList />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/github/repos/:repoId"
-          element={
-            <ProtectedRoute>
-              <GitHubRepoDetails />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/github/repos/:repoId/pr/:prNumber"
-          element={
-            <ProtectedRoute>
-              <GitHubPRDetails />
-            </ProtectedRoute>
-          }
-        />
-
-
-
-
+            {/* 404 fallback */}
             <Route
               path="*"
               element={

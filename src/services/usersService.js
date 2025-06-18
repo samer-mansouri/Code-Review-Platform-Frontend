@@ -15,7 +15,12 @@ const usersService = {
 
   // Update user by ID (admin only)
   update: (userId, data) =>
-    axiosInstance.put(`/api/admin/users/${userId}`, data).then((res) => res.data),
+    axiosInstance
+      .put(`/api/admin/users/${userId}`, data)
+      .then((res) => res.data),
+
+  get: (userId) =>
+    axiosInstance.get(`/api/admin/users/${userId}`).then((res) => res.data),
 };
 
 export default usersService;

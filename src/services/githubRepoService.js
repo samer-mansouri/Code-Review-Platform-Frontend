@@ -14,6 +14,16 @@ const githubRepoService = {
 
   getPullRequestDetails: (repoId, number) =>
     axiosInstance.get(`/api/github-repo/${repoId}/pull/${number}`).then(res => res.data),
+
+  delete: async (repoId) => {
+  try {
+    const res = await axiosInstance.delete(`/api/github-repo/${repoId}`);
+    return res.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
 };
 
 export default githubRepoService;

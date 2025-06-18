@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
-import { Table, Input, Button, Tag, Spin } from "antd";
+import {
+  Table,
+  Input,
+  Button,
+  Tag,
+  Spin,
+  Popconfirm,
+} from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
   SyncOutlined,
   EyeOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -55,6 +63,17 @@ const GitHubReposList = () => {
       console.error(err);
     } finally {
       setSyncing((prev) => ({ ...prev, [`${type}-${repoId}`]: false }));
+    }
+  };
+
+  const handleDelete = async (repoId) => {
+    try {
+      await githubRepoService.delete(repoId);
+      setRepos((prev) => prev.filter((repo) => repo._id !== repoId));
+      toast.success("Dépôt supprimé avec succès !");
+    } catch (err) {
+      toast.error("Erreur lors de la suppression du dépôt.");
+      console.error(err);
     }
   };
 
@@ -120,33 +139,39 @@ const GitHubReposList = () => {
       key: "actions",
       render: (_, record) => (
         <div className="flex gap-2">
-          <Button
+          {/* <Button
             icon={<SyncOutlined />}
-            loading={syncing[`commits-${record.id}`]}
-            onClick={() => 
-                {
-                    console.log("REcord ID:", record);
-                    console.log(`Synchronizing commits for repo ID: ${record._id}`);
-                    handleSync(record.id, "commits")}
-                }
+            loading={syncing[`commits-${record._id}`]}
+            onClick={() => handleSync(record._id, "commits")}
           >
             Sync Commits
-          </Button>
+          </Button> */}
 
           <Button
             icon={<SyncOutlined />}
-            loading={syncing[`prs-${record.id}`]}
-            onClick={() => handleSync(record.id, "prs")}
+            loading={syncing[`prs-${record._id}`]}
+            onClick={() => handleSync(record._id, "prs")}
           >
             Sync PRs
           </Button>
 
           <Button
             icon={<EyeOutlined />}
-            onClick={() => navigate(`/github/repos/${record.id}`)}
+            onClick={() => navigate(`/github/repos/${record._id}`)}
           >
             Voir
           </Button>
+
+          <Popconfirm
+            title="Êtes-vous sûr de vouloir supprimer ce dépôt ?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Oui"
+            cancelText="Non"
+          >
+            <Button danger icon={<DeleteOutlined />}>
+              Supprimer
+            </Button>
+          </Popconfirm>
         </div>
       ),
     },
@@ -182,7 +207,7 @@ const GitHubReposList = () => {
       <Table
         columns={columns}
         dataSource={filteredRepos}
-        rowKey="id"
+        rowKey="_id"
         pagination={{ pageSize: 10 }}
         bordered
       />

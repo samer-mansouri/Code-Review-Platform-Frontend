@@ -1,27 +1,29 @@
-import { Drawer, Form, Button, Col, Row, Input as AntInput, Select } from 'antd';
+import { Drawer, Form, Button, Col, Row, Input as AntInput } from 'antd';
 import usersService from '../../services/usersService';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const { Option } = Select;
-
-const AddUserDrawer = ({ visible, onClose, onAddUser }) => {
+const AddUserDrawer = ({ visible, onClose, onAddDemand }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   const onFinish = (values) => {
     setLoading(true);
-    usersService.create(values)
+
+    // Inject the role as developer
+    const payload = { ...values, role: 'developer' };
+
+    usersService.create(payload)
       .then((response) => {
-        onAddUser(response);
-        toast.success("Utilisateur ajouté avec succès", {
-          position: toast.POSITION.TOP_RIGHT,
+        onAddDemand(response);
+        toast.success("Développeur ajouté avec succès", {
+          position: "top-right",
           autoClose: 2000,
         });
       })
       .catch((error) => {
         console.error("Erreur lors de l'ajout:", error);
-        toast.error("Erreur lors de la création de l'utilisateur");
+        toast.error("Erreur lors de la création du Développeur");
       })
       .finally(() => {
         setLoading(false);
@@ -32,7 +34,7 @@ const AddUserDrawer = ({ visible, onClose, onAddUser }) => {
 
   return (
     <Drawer
-      title="Ajouter un utilisateur"
+      title="Ajouter un Développeur"
       onClose={onClose}
       visible={visible}
       bodyStyle={{ paddingBottom: 40 }}
@@ -76,19 +78,6 @@ const AddUserDrawer = ({ visible, onClose, onAddUser }) => {
               rules={[{ required: true, message: "Veuillez entrer le mot de passe" }]}
             >
               <AntInput.Password placeholder="Entrez le mot de passe" />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="role"
-              label="Rôle"
-              initialValue="user"
-              rules={[{ required: true, message: "Veuillez sélectionner un rôle" }]}
-            >
-              <Select>
-                <Option value="user">Utilisateur</Option>
-                <Option value="admin">Administrateur</Option>
-              </Select>
             </Form.Item>
           </Col>
         </Row>

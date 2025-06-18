@@ -25,20 +25,18 @@ const UsersList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const fetchData = () => {
-  setLoading(true);
-  usersService.getAll()
-    .then(response => {
-      console.log(response);
-      setData(response); // response is the users array
-    })
-    .catch(error => {
-      console.log(error);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-};
-
+    setLoading(true);
+    usersService.getAll()
+      .then(response => {
+        setData(response);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     fetchData();
@@ -65,8 +63,8 @@ const UsersList = () => {
 
   const handleDelete = (record) => {
     confirm({
-      title: 'Are you sure you want to delete this user?',
-      content: `User: ${record.first_name} ${record.last_name}`,
+      title: 'Êtes-vous sûr de vouloir supprimer ce Développeur ?',
+      content: `Développeur : ${record.first_name} ${record.last_name}`,
       icon: <DeleteOutlined style={{ color: 'red' }} />,
       onOk() {
         usersService.delete(record.id)
@@ -75,11 +73,11 @@ const UsersList = () => {
             setData(updatedData);
           })
           .catch(error => {
-            console.log('Error deleting user:', error);
+            console.error('Erreur de suppression :', error);
           });
       },
       onCancel() {
-        console.log('Cancelled delete');
+        console.log('Suppression annulée');
       },
     });
   };
@@ -90,13 +88,13 @@ const UsersList = () => {
 
   const columns = [
     {
-      title: 'First Name',
+      title: 'Prénom',
       dataIndex: 'first_name',
       key: 'first_name',
       sorter: (a, b) => a.first_name.localeCompare(b.first_name),
     },
     {
-      title: 'Last Name',
+      title: 'Nom',
       dataIndex: 'last_name',
       key: 'last_name',
       sorter: (a, b) => a.last_name.localeCompare(b.last_name),
@@ -108,7 +106,7 @@ const UsersList = () => {
       sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
-      title: 'Role',
+      title: 'Rôle',
       dataIndex: 'role',
       key: 'role',
       render: (role) => (
@@ -126,14 +124,14 @@ const UsersList = () => {
             icon={<UserOutlined />}
             onClick={() => navigate(`/users/${record.id}`)}
           >
-            Details
+            Détails
           </Button>
           <Button
             type="primary"
             icon={<EditOutlined />}
             onClick={() => showUpdateDrawer(record)}
           >
-            Update
+            Modifier
           </Button>
           <Button
             type="primary"
@@ -141,7 +139,7 @@ const UsersList = () => {
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record)}
           >
-            Delete
+            Supprimer
           </Button>
         </Space>
       ),
@@ -162,18 +160,18 @@ const UsersList = () => {
         </div>
       )}
 
-      <h1 className="text-lg font-semibold mb-4">Users List</h1>
+      <h1 className="text-lg font-semibold mb-4">Liste des Développeurs</h1>
 
       <div className="flex justify-between items-center mb-4">
         <Input
-          placeholder="Search users..."
+          placeholder="Rechercher un Développeur..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ width: 300 }}
           prefix={<SearchOutlined />}
         />
         <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-          Add new user
+          Ajouter un Développeur
         </Button>
       </div>
 

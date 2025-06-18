@@ -28,6 +28,16 @@ const authService = {
         }
     },
 
+    register: async (data) => {
+  try {
+    const response = await axiosInstance.post("/api/auth/register", data);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
+
 };
 
 export default authService;

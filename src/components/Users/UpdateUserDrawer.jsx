@@ -1,9 +1,7 @@
-import { Drawer, Form, Button, Col, Row, Input as AntInput, Select } from 'antd';
+import { Drawer, Form, Button, Col, Row, Input as AntInput } from 'antd';
 import usersService from '../../services/usersService';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-
-const { Option } = Select;
 
 const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
   const [form] = Form.useForm();
@@ -15,7 +13,6 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
-        role: userData.role || "user",
       });
     }
   }, [userData, form]);
@@ -23,18 +20,23 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
   const onFinish = (values) => {
     setLoading(true);
 
-    // only send password if filled
-    const payload = { ...values };
-    if (!payload.password) delete payload.password;
+    const payload = {
+      ...values,
+      role: 'developer', // Force developer role
+    };
+
+    if (!payload.password) {
+      delete payload.password;
+    }
 
     usersService.update(userData.id, payload)
       .then((response) => {
         onUpdateDemand(response);
-        toast.success("Utilisateur mis à jour avec succès");
+        toast.success("Développeur mis à jour avec succès");
       })
       .catch((error) => {
         console.error("Erreur lors de la mise à jour:", error);
-        toast.error("Erreur lors de la mise à jour de l'utilisateur");
+        toast.error("Erreur lors de la mise à jour du Développeur");
       })
       .finally(() => {
         setLoading(false);
@@ -44,7 +46,7 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
 
   return (
     <Drawer
-      title="Mettre à jour l'utilisateur"
+      title="Mettre à jour le Développeur"
       onClose={onClose}
       visible={visible}
       bodyStyle={{ paddingBottom: 40 }}
@@ -87,19 +89,6 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
           <Col span={24}>
             <Form.Item name="password" label="Mot de passe (optionnel)">
               <AntInput.Password placeholder="Laissez vide pour ne pas changer" />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item
-              name="role"
-              label="Rôle"
-              rules={[{ required: true, message: "Veuillez sélectionner un rôle" }]}
-            >
-              <Select>
-                <Option value="user">Utilisateur</Option>
-                <Option value="admin">Administrateur</Option>
-              </Select>
             </Form.Item>
           </Col>
         </Row>
