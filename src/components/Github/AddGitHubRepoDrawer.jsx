@@ -15,7 +15,7 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
     if (visible) {
       tokenService.getGithubTokens()
         .then(setTokens)
-        .catch(() => toast.error("Erreur lors du chargement des tokens GitHub"));
+        .catch(() => toast.error("Error loading GitHub tokens"));
     }
   }, [visible]);
 
@@ -27,12 +27,12 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
         token_id: values.token_id,
       });
 
-      toast.success("Dépôt ajouté avec succès !");
+      toast.success("Repository added successfully!");
       onAdd(response);
       form.resetFields();
       onClose();
     } catch (error) {
-      toast.error(error?.response?.data?.msg || "Erreur lors de l'ajout du dépôt");
+      toast.error(error?.response?.data?.msg || "Error adding the repository");
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
 
   return (
     <Drawer
-      title="Ajouter un dépôt GitHub"
+      title="Add GitHub Repository"
       visible={visible}
       onClose={onClose}
       bodyStyle={{ paddingBottom: 40 }}
@@ -50,10 +50,10 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
           <Col span={24}>
             <Form.Item
               name="token_id"
-              label="Token GitHub"
-              rules={[{ required: true, message: "Veuillez sélectionner un token" }]}
+              label="GitHub Token"
+              rules={[{ required: true, message: "Please select a token" }]}
             >
-              <Select placeholder="Sélectionner un token">
+              <Select placeholder="Select a token">
                 {tokens.map((token) => (
                   <Option key={token.id} value={token.id}>
                     {token.name}
@@ -66,8 +66,8 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
           <Col span={24}>
             <Form.Item
               name="repo_url"
-              label="URL du dépôt GitHub"
-              rules={[{ required: true, message: "Veuillez entrer l'URL du dépôt" }]}
+              label="GitHub Repository URL"
+              rules={[{ required: true, message: "Please enter the repository URL" }]}
             >
               <Input placeholder="https://github.com/username/repo-name" />
             </Form.Item>
@@ -76,10 +76,10 @@ const AddGitHubRepoDrawer = ({ visible, onClose, onAdd }) => {
 
         <div style={{ textAlign: 'right' }}>
           <Button onClick={onClose} style={{ marginRight: 8 }} disabled={loading}>
-            Annuler
+            Cancel
           </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Ajouter
+            Add
           </Button>
         </div>
       </Form>

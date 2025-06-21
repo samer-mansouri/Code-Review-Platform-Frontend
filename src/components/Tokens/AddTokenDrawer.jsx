@@ -28,11 +28,11 @@ const AddTokenDrawer = ({ visible, onClose, onAdd }) => {
         source: source === 'gitlab' ? 'GitLab' : 'GitHub',
       });
 
-      toast.success('Token ajouté avec succès');
+      toast.success('Token added successfully');
       form.resetFields();
       onClose();
     } catch (err) {
-      toast.error(err.response?.data?.msg || 'Erreur lors de l’ajout');
+      toast.error(err.response?.data?.msg || 'Error while adding the token');
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const AddTokenDrawer = ({ visible, onClose, onAdd }) => {
 
   return (
     <Drawer
-      title="Ajouter un token"
+      title="Add a Token"
       onClose={onClose}
       visible={visible}
       bodyStyle={{ paddingBottom: 40 }}
@@ -51,9 +51,9 @@ const AddTokenDrawer = ({ visible, onClose, onAdd }) => {
             <Form.Item
               name="source"
               label="Source"
-              rules={[{ required: true, message: 'Veuillez choisir une source' }]}
+              rules={[{ required: true, message: 'Please select a source' }]}
             >
-              <Select placeholder="Choisir une source">
+              <Select placeholder="Select a source">
                 <Option value="gitlab">GitLab</Option>
                 <Option value="github">GitHub</Option>
               </Select>
@@ -62,17 +62,17 @@ const AddTokenDrawer = ({ visible, onClose, onAdd }) => {
           <Col span={24}>
             <Form.Item
               name="name"
-              label="Nom du token"
-              rules={[{ required: true, message: 'Veuillez entrer un nom' }]}
+              label="Token Name"
+              rules={[{ required: true, message: 'Please enter a name' }]}
             >
-              <Input placeholder="Nom du token" />
+              <Input placeholder="Token name" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item
               name="token"
               label="Token"
-              rules={[{ required: true, message: 'Veuillez entrer le token' }]}
+              rules={[{ required: true, message: 'Please enter the token' }]}
             >
               <Input.Password placeholder="Token" />
             </Form.Item>
@@ -80,10 +80,10 @@ const AddTokenDrawer = ({ visible, onClose, onAdd }) => {
         </Row>
         <div style={{ textAlign: 'right' }}>
           <Button onClick={onClose} style={{ marginRight: 8 }} disabled={loading}>
-            Annuler
+            Cancel
           </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Ajouter
+            Add
           </Button>
         </div>
       </Form>

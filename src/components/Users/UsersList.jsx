@@ -63,8 +63,8 @@ const UsersList = () => {
 
   const handleDelete = (record) => {
     confirm({
-      title: 'Êtes-vous sûr de vouloir supprimer ce Développeur ?',
-      content: `Développeur : ${record.first_name} ${record.last_name}`,
+      title: 'Are you sure you want to delete this developer?',
+      content: `Developer: ${record.first_name} ${record.last_name}`,
       icon: <DeleteOutlined style={{ color: 'red' }} />,
       onOk() {
         usersService.delete(record.id)
@@ -73,11 +73,11 @@ const UsersList = () => {
             setData(updatedData);
           })
           .catch(error => {
-            console.error('Erreur de suppression :', error);
+            console.error('Deletion error:', error);
           });
       },
       onCancel() {
-        console.log('Suppression annulée');
+        console.log('Deletion cancelled');
       },
     });
   };
@@ -88,13 +88,13 @@ const UsersList = () => {
 
   const columns = [
     {
-      title: 'Prénom',
+      title: 'First Name',
       dataIndex: 'first_name',
       key: 'first_name',
       sorter: (a, b) => a.first_name.localeCompare(b.first_name),
     },
     {
-      title: 'Nom',
+      title: 'Last Name',
       dataIndex: 'last_name',
       key: 'last_name',
       sorter: (a, b) => a.last_name.localeCompare(b.last_name),
@@ -106,7 +106,7 @@ const UsersList = () => {
       sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
-      title: 'Rôle',
+      title: 'Role',
       dataIndex: 'role',
       key: 'role',
       render: (role) => (
@@ -124,14 +124,14 @@ const UsersList = () => {
             icon={<UserOutlined />}
             onClick={() => navigate(`/users/${record.id}`)}
           >
-            Détails
+            Details
           </Button>
           <Button
             type="primary"
             icon={<EditOutlined />}
             onClick={() => showUpdateDrawer(record)}
           >
-            Modifier
+            Edit
           </Button>
           <Button
             type="primary"
@@ -139,7 +139,7 @@ const UsersList = () => {
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record)}
           >
-            Supprimer
+            Delete
           </Button>
         </Space>
       ),
@@ -160,18 +160,18 @@ const UsersList = () => {
         </div>
       )}
 
-      <h1 className="text-lg font-semibold mb-4">Liste des Développeurs</h1>
+      <h1 className="text-lg font-semibold mb-4">Developer List</h1>
 
       <div className="flex justify-between items-center mb-4">
         <Input
-          placeholder="Rechercher un Développeur..."
+          placeholder="Search a developer..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ width: 300 }}
           prefix={<SearchOutlined />}
         />
         <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-          Ajouter un Développeur
+          Add Developer
         </Button>
       </div>
 

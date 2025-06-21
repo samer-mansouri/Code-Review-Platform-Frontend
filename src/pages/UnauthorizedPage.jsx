@@ -8,11 +8,11 @@ const UnauthorizedPage = () => {
     <div className="flex items-center justify-center h-screen bg-gray-50">
       <Result
         status="403"
-        title="403 - Accès refusé"
-        subTitle="Vous n'avez pas les autorisations nécessaires pour accéder à cette page."
+        title="403 - Access Denied"
+        subTitle="You do not have the necessary permissions to access this page."
         extra={
           <Button type="primary" onClick={() => navigate(-1)}>
-            Retour
+            Go Back
           </Button>
         }
         style={{ background: "white", padding: 24, borderRadius: 8 }}

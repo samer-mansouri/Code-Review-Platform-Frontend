@@ -19,13 +19,13 @@ const GitHubRepoDetails = () => {
     githubRepoService
       .getPullRequests(repoId)
       .then(setPrs)
-      .catch(() => toast.error("Erreur lors du chargement des PRs"))
+      .catch(() => toast.error("Error loading pull requests."))
       .finally(() => setLoading(false));
   }, [repoId]);
 
   const columns = [
     {
-      title: "Titre",
+      title: "Title",
       dataIndex: "title",
       key: "title",
       render: (text, record) => (
@@ -40,7 +40,7 @@ const GitHubRepoDetails = () => {
       ),
     },
     {
-      title: "État",
+      title: "State",
       dataIndex: "state",
       key: "state",
       render: (state) => (
@@ -60,13 +60,13 @@ const GitHubRepoDetails = () => {
       ),
     },
     {
-      title: "Créé le",
+      title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => new Date(date).toLocaleString(),
     },
     {
-      title: "Auteur",
+      title: "Author",
       dataIndex: "user_login",
       key: "user_login",
       render: (login) => <Tag color="geekblue">{login}</Tag>,
@@ -76,10 +76,10 @@ const GitHubRepoDetails = () => {
   return (
     <div>
       <Button onClick={handleBack} type="link" style={{ marginBottom: 16 }}>
-        ← Retour aux dépôts GitHub
+        ← Back to GitHub Repositories
       </Button>
 
-      <Title level={3}>Liste des Pull Requests</Title>
+      <Title level={3}>Pull Request List</Title>
 
       {loading ? (
         <Spin size="large" />

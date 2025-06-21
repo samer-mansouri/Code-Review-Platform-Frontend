@@ -34,7 +34,7 @@ const GitHubReposList = () => {
       const data = await githubRepoService.getAllRepos();
       setRepos(data);
     } catch (err) {
-      toast.error("Erreur lors du chargement des dépôts GitHub.");
+      toast.error("Error loading GitHub repositories.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -57,9 +57,9 @@ const GitHubReposList = () => {
       } else {
         await githubRepoService.syncPullRequests(repoId);
       }
-      toast.success(`Synchronisation des ${type} réussie !`);
+      toast.success(`Successfully synced ${type}!`);
     } catch (err) {
-      toast.error(`Échec de la synchronisation des ${type}.`);
+      toast.error(`Failed to sync ${type}.`);
       console.error(err);
     } finally {
       setSyncing((prev) => ({ ...prev, [`${type}-${repoId}`]: false }));
@@ -70,9 +70,9 @@ const GitHubReposList = () => {
     try {
       await githubRepoService.delete(repoId);
       setRepos((prev) => prev.filter((repo) => repo._id !== repoId));
-      toast.success("Dépôt supprimé avec succès !");
+      toast.success("Repository deleted successfully!");
     } catch (err) {
-      toast.error("Erreur lors de la suppression du dépôt.");
+      toast.error("Error deleting the repository.");
       console.error(err);
     }
   };
@@ -85,13 +85,13 @@ const GitHubReposList = () => {
 
   const columns = [
     {
-      title: "Nom",
+      title: "Name",
       dataIndex: "name",
       key: "name",
       render: (text, record) => (
         <a
           className="text-blue-600 hover:underline"
-          onClick={() => navigate(`/github/repos/${record._id}`)}
+          onClick={() => navigate(`/github/repos/${record.id}`)}
         >
           {text}
         </a>
@@ -99,7 +99,7 @@ const GitHubReposList = () => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: "Propriétaire",
+      title: "Owner",
       dataIndex: "owner_login",
       key: "owner_login",
     },
@@ -114,15 +114,15 @@ const GitHubReposList = () => {
       ),
     },
     {
-      title: "Privé",
+      title: "Private",
       dataIndex: "private",
       key: "private",
       render: (value) => (
-        <Tag color={value ? "red" : "green"}>{value ? "Oui" : "Non"}</Tag>
+        <Tag color={value ? "red" : "green"}>{value ? "Yes" : "No"}</Tag>
       ),
     },
     {
-      title: "Créé le",
+      title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => new Date(date).toLocaleString(),
@@ -139,37 +139,29 @@ const GitHubReposList = () => {
       key: "actions",
       render: (_, record) => (
         <div className="flex gap-2">
-          {/* <Button
-            icon={<SyncOutlined />}
-            loading={syncing[`commits-${record._id}`]}
-            onClick={() => handleSync(record._id, "commits")}
-          >
-            Sync Commits
-          </Button> */}
-
           <Button
             icon={<SyncOutlined />}
-            loading={syncing[`prs-${record._id}`]}
-            onClick={() => handleSync(record._id, "prs")}
+            loading={syncing[`prs-${record.id}`]}
+            onClick={() => handleSync(record.id, "prs")}
           >
             Sync PRs
           </Button>
 
           <Button
             icon={<EyeOutlined />}
-            onClick={() => navigate(`/github/repos/${record._id}`)}
+            onClick={() => navigate(`/github/repos/${record.id}`)}
           >
-            Voir
+            View
           </Button>
 
           <Popconfirm
-            title="Êtes-vous sûr de vouloir supprimer ce dépôt ?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Oui"
-            cancelText="Non"
+            title="Are you sure you want to delete this repository?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
           >
             <Button danger icon={<DeleteOutlined />}>
-              Supprimer
+              Delete
             </Button>
           </Popconfirm>
         </div>
@@ -185,11 +177,11 @@ const GitHubReposList = () => {
         </div>
       )}
 
-      <h1 className="text-lg font-semibold mb-4">Dépôts GitHub</h1>
+      <h1 className="text-lg font-semibold mb-4">GitHub Repositories</h1>
 
       <div className="flex justify-between items-center mb-4">
         <Input
-          placeholder="Rechercher un dépôt..."
+          placeholder="Search a repository..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ width: 300 }}
@@ -200,7 +192,7 @@ const GitHubReposList = () => {
           icon={<PlusOutlined />}
           onClick={() => setDrawerVisible(true)}
         >
-          Ajouter un dépôt
+          Add Repository
         </Button>
       </div>
 

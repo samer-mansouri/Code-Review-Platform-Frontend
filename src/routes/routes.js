@@ -9,14 +9,14 @@ import {
 export const menuItems = [
   {
     key: 'stats',
-    label: 'Statistiques',
+    label: 'Statistics',
     path: '/stats',
     icon: DashboardOutlined,
     roles: ['admin'],
   },
   {
     key: 'users',
-    label: 'Développeurs',
+    label: 'Developers',
     path: '/users',
     icon: UserOutlined,
     roles: ['admin'],

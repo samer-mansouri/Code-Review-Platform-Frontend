@@ -18,7 +18,7 @@ function UserDetails() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Erreur lors du chargement du Développeur:", err);
+        console.error("Error while loading developer:", err);
         setLoading(false);
       });
   }, [id]);
@@ -35,20 +35,20 @@ function UserDetails() {
             icon={<ArrowLeftOutlined />}
             onClick={() => navigate(-1)}
           >
-            Retour
+            Back
           </Button>
           <span>
-            Détails du Développeur - {user.first_name} {user.last_name}
+            Developer Details - {user.first_name} {user.last_name}
           </span>
         </div>
       }
       style={{ margin: "0 auto" }}
     >
       <Descriptions bordered column={1}>
-        <Descriptions.Item label="Prénom">{user.first_name}</Descriptions.Item>
-        <Descriptions.Item label="Nom">{user.last_name}</Descriptions.Item>
+        <Descriptions.Item label="First Name">{user.first_name}</Descriptions.Item>
+        <Descriptions.Item label="Last Name">{user.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
-        <Descriptions.Item label="Rôle">
+        <Descriptions.Item label="Role">
           <Tag
             color={
               user.role === "admin"
@@ -62,12 +62,12 @@ function UserDetails() {
           </Tag>
         </Descriptions.Item>
         {user.created_at && (
-          <Descriptions.Item label="Créé le">
+          <Descriptions.Item label="Created At">
             {new Date(user.created_at).toLocaleString()}
           </Descriptions.Item>
         )}
         {user.updated_at && (
-          <Descriptions.Item label="Mis à jour le">
+          <Descriptions.Item label="Updated At">
             {new Date(user.updated_at).toLocaleString()}
           </Descriptions.Item>
         )}

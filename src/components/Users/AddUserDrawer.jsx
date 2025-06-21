@@ -10,20 +10,20 @@ const AddUserDrawer = ({ visible, onClose, onAddDemand }) => {
   const onFinish = (values) => {
     setLoading(true);
 
-    // Inject the role as developer
+    // Force the role to 'developer'
     const payload = { ...values, role: 'developer' };
 
     usersService.create(payload)
       .then((response) => {
         onAddDemand(response);
-        toast.success("Développeur ajouté avec succès", {
+        toast.success("Developer added successfully", {
           position: "top-right",
           autoClose: 2000,
         });
       })
       .catch((error) => {
-        console.error("Erreur lors de l'ajout:", error);
-        toast.error("Erreur lors de la création du Développeur");
+        console.error("Error while adding:", error);
+        toast.error("Error while creating the developer");
       })
       .finally(() => {
         setLoading(false);
@@ -34,7 +34,7 @@ const AddUserDrawer = ({ visible, onClose, onAddDemand }) => {
 
   return (
     <Drawer
-      title="Ajouter un Développeur"
+      title="Add Developer"
       onClose={onClose}
       visible={visible}
       bodyStyle={{ paddingBottom: 40 }}
@@ -44,19 +44,19 @@ const AddUserDrawer = ({ visible, onClose, onAddDemand }) => {
           <Col span={24}>
             <Form.Item
               name="first_name"
-              label="Prénom"
-              rules={[{ required: true, message: "Veuillez entrer le prénom" }]}
+              label="First Name"
+              rules={[{ required: true, message: "Please enter the first name" }]}
             >
-              <AntInput placeholder="Entrez le prénom" />
+              <AntInput placeholder="Enter first name" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item
               name="last_name"
-              label="Nom"
-              rules={[{ required: true, message: "Veuillez entrer le nom" }]}
+              label="Last Name"
+              rules={[{ required: true, message: "Please enter the last name" }]}
             >
-              <AntInput placeholder="Entrez le nom" />
+              <AntInput placeholder="Enter last name" />
             </Form.Item>
           </Col>
           <Col span={24}>
@@ -64,30 +64,30 @@ const AddUserDrawer = ({ visible, onClose, onAddDemand }) => {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: "Veuillez entrer l'email" },
-                { type: "email", message: "Email invalide" },
+                { required: true, message: "Please enter the email" },
+                { type: "email", message: "Invalid email" },
               ]}
             >
-              <AntInput placeholder="Entrez l'email" />
+              <AntInput placeholder="Enter email" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item
               name="password"
-              label="Mot de passe"
-              rules={[{ required: true, message: "Veuillez entrer le mot de passe" }]}
+              label="Password"
+              rules={[{ required: true, message: "Please enter the password" }]}
             >
-              <AntInput.Password placeholder="Entrez le mot de passe" />
+              <AntInput.Password placeholder="Enter password" />
             </Form.Item>
           </Col>
         </Row>
 
         <div style={{ textAlign: 'right' }}>
           <Button onClick={onClose} style={{ marginRight: 8 }} disabled={loading}>
-            Annuler
+            Cancel
           </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Ajouter
+            Add
           </Button>
         </div>
       </Form>

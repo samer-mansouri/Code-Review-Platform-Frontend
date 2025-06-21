@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Tag, Space, Spin } from 'antd';
+import { Table, Button, Modal, Tag, Spin } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import tokenService from '../../services/tokenService';
 import { toast } from 'react-toastify';
-import AddTokenDrawer from './AddTokenDrawer'; // Assurez-vous que ce fichier existe
+import AddTokenDrawer from './AddTokenDrawer';
 
 const { confirm } = Modal;
 
@@ -17,13 +17,13 @@ const TokenManager = () => {
     try {
       const [gitlab, github] = await Promise.all([
         tokenService.getGitlabTokens(),
-        tokenService.getGithubTokens()
+        tokenService.getGithubTokens(),
       ]);
       const formattedGitlab = gitlab.map(t => ({ ...t, source: 'GitLab' }));
       const formattedGithub = github.map(t => ({ ...t, source: 'GitHub' }));
       setTokens([...formattedGitlab, ...formattedGithub]);
     } catch (error) {
-      toast.error("Erreur lors du chargement des tokens.");
+      toast.error("Error while loading tokens.");
     } finally {
       setLoading(false);
     }
@@ -42,11 +42,11 @@ const TokenManager = () => {
 
   const handleDelete = (record) => {
     confirm({
-      title: 'Confirmer la suppression',
-      content: `Supprimer le token "${record.name}" ?`,
-      okText: 'Supprimer',
+      title: 'Confirm Deletion',
+      content: `Are you sure you want to delete the token "${record.name}"?`,
+      okText: 'Delete',
       okType: 'danger',
-      cancelText: 'Annuler',
+      cancelText: 'Cancel',
       onOk: async () => {
         try {
           if (record.source === 'GitLab') {
@@ -55,9 +55,9 @@ const TokenManager = () => {
             await tokenService.deleteGithubToken(record.id);
           }
           setTokens(prev => prev.filter(t => t.id !== record.id));
-          toast.success("Token supprimé.");
+          toast.success("Token deleted successfully.");
         } catch (err) {
-          toast.error("Erreur lors de la suppression.");
+          toast.error("Error while deleting the token.");
         }
       }
     });
@@ -65,7 +65,7 @@ const TokenManager = () => {
 
   const columns = [
     {
-      title: 'Nom',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
@@ -87,19 +87,19 @@ const TokenManager = () => {
           icon={<DeleteOutlined />}
           onClick={() => handleDelete(record)}
         >
-          Supprimer
+          Delete
         </Button>
       ),
-    }
+    },
   ];
 
   return (
     <div className="p-4 bg-white rounded shadow">
-      <h2 className="text-lg font-semibold mb-4">Gestion des Tokens GitHub / GitLab</h2>
+      <h2 className="text-lg font-semibold mb-4">GitHub / GitLab Token Management</h2>
 
       <div className="flex justify-end mb-4">
         <Button type="primary" icon={<PlusOutlined />} onClick={openDrawer}>
-          Ajouter un token
+          Add Token
         </Button>
       </div>
 

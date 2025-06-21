@@ -15,7 +15,7 @@ const LoginPage = () => {
       .then((response) => {
         const { user } = response;
 
-        // Stockage en localStorage
+        // Store in localStorage
         localStorage.setItem("access", response.access_token);
         localStorage.setItem("refresh", response.refresh_token);
         localStorage.setItem("first_name", user.first_name);
@@ -24,7 +24,7 @@ const LoginPage = () => {
         localStorage.setItem("id", user.id);
         localStorage.setItem("role", user.role);
 
-        // Redirection selon le rôle
+        // Redirect based on role
         if (user.role === "developer") {
           navigate("/tokens");
         } else if (user.role === "admin") {
@@ -34,7 +34,7 @@ const LoginPage = () => {
         }
       })
       .catch((error) => {
-        console.error("Erreur de connexion :", error);
+        console.error("Login error:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -44,7 +44,7 @@ const LoginPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <Card className="w-full max-w-md shadow-lg p-8 bg-white rounded-md">
-        <h1 className="text-2xl font-semibold text-center mb-6">Connexion</h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
         <Form
           name="login_form"
           initialValues={{ remember: true }}
@@ -52,25 +52,25 @@ const LoginPage = () => {
           layout="vertical"
         >
           <Form.Item
-            label="Adresse email"
+            label="Email address"
             name="email"
             rules={[
-              { type: "email", message: "Adresse email invalide !" },
-              { required: true, message: "Veuillez entrer votre adresse email !" },
+              { type: "email", message: "Invalid email address!" },
+              { required: true, message: "Please enter your email address!" },
             ]}
           >
             <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
 
           <Form.Item
-            label="Mot de passe"
+            label="Password"
             name="password"
             rules={[
-              { required: true, message: "Veuillez entrer votre mot de passe !" },
-              { min: 6, message: "Le mot de passe doit contenir au moins 6 caractères" },
+              { required: true, message: "Please enter your password!" },
+              { min: 6, message: "Password must be at least 6 characters" },
             ]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Mot de passe" />
+            <Input.Password prefix={<LockOutlined />} placeholder="Password" />
           </Form.Item>
 
           <Form.Item>
@@ -80,13 +80,13 @@ const LoginPage = () => {
               className="w-full"
               loading={loading}
             >
-              Se connecter
+              Log In
             </Button>
           </Form.Item>
         </Form>
 
         <p className="text-center mt-4">
-          Vous n'avez pas de compte ? <Link to="/register">Créer un compte</Link>
+          Don't have an account? <Link to="/register">Create an account</Link>
         </p>
       </Card>
     </div>

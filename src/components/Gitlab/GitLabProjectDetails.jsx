@@ -18,13 +18,13 @@ const GitLabProjectDetails = () => {
     gitlabProjectService
       .getMergeRequests(projectId)
       .then(setMrs)
-      .catch(() => toast.error("Erreur lors du chargement des MRs"))
+      .catch(() => toast.error("Error while loading merge requests."))
       .finally(() => setLoading(false));
   }, [projectId]);
 
   const columns = [
     {
-      title: "Titre",
+      title: "Title",
       dataIndex: "title",
       key: "title",
       render: (text, record) => (
@@ -38,7 +38,7 @@ const GitLabProjectDetails = () => {
       ),
     },
     {
-      title: "État",
+      title: "State",
       dataIndex: "state",
       key: "state",
       render: (state) => (
@@ -56,7 +56,7 @@ const GitLabProjectDetails = () => {
       ),
     },
     {
-      title: "Statut fusion",
+      title: "Merge Status",
       dataIndex: "merge_status",
       key: "merge_status",
       render: (status) => (
@@ -64,7 +64,7 @@ const GitLabProjectDetails = () => {
       ),
     },
     {
-      title: "Créé le",
+      title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => new Date(date).toLocaleString(),
@@ -74,10 +74,10 @@ const GitLabProjectDetails = () => {
   return (
     <div>
       <Button onClick={handleBack} type="link" style={{ marginBottom: 16 }}>
-        ← Retour aux projets GitLab
+        ← Back to GitLab Projects
       </Button>
 
-      <Title level={3}>Liste des Merge Requests</Title>
+      <Title level={3}>Merge Request List</Title>
 
       {loading ? (
         <Spin size="large" />

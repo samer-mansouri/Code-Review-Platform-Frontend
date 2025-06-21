@@ -11,6 +11,7 @@ import StatsDashboard from "../components/Stats/StatsDashboard";
 import UserProfile from "../components/User/UserProfile";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 import UsersList from "../components/Users/UsersList";
+import AiReviewDetails from "../components/Review/AiReviewDetails";
 
 export const protectedRoutes = [
   {
@@ -56,6 +57,11 @@ export const protectedRoutes = [
   {
     path: "/github/repos/:repoId/pr/:prNumber",
     element: GitHubPRDetails,
+    roles: ["developer"],
+  },
+  {
+    path: "/:source/reviews/:prId",
+    element: AiReviewDetails,
     roles: ["developer"],
   },
   {

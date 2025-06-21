@@ -32,11 +32,11 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
     usersService.update(userData.id, payload)
       .then((response) => {
         onUpdateDemand(response);
-        toast.success("Développeur mis à jour avec succès");
+        toast.success("Developer updated successfully");
       })
       .catch((error) => {
-        console.error("Erreur lors de la mise à jour:", error);
-        toast.error("Erreur lors de la mise à jour du Développeur");
+        console.error("Error while updating:", error);
+        toast.error("Error while updating the developer");
       })
       .finally(() => {
         setLoading(false);
@@ -46,7 +46,7 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
 
   return (
     <Drawer
-      title="Mettre à jour le Développeur"
+      title="Update Developer"
       onClose={onClose}
       visible={visible}
       bodyStyle={{ paddingBottom: 40 }}
@@ -56,20 +56,20 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
           <Col span={24}>
             <Form.Item
               name="first_name"
-              label="Prénom"
-              rules={[{ required: true, message: "Veuillez entrer le prénom" }]}
+              label="First Name"
+              rules={[{ required: true, message: "Please enter the first name" }]}
             >
-              <AntInput placeholder="Entrez le prénom" />
+              <AntInput placeholder="Enter first name" />
             </Form.Item>
           </Col>
 
           <Col span={24}>
             <Form.Item
               name="last_name"
-              label="Nom"
-              rules={[{ required: true, message: "Veuillez entrer le nom" }]}
+              label="Last Name"
+              rules={[{ required: true, message: "Please enter the last name" }]}
             >
-              <AntInput placeholder="Entrez le nom" />
+              <AntInput placeholder="Enter last name" />
             </Form.Item>
           </Col>
 
@@ -78,27 +78,27 @@ const UpdateUserDrawer = ({ visible, onClose, userData, onUpdateDemand }) => {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: "Veuillez entrer l'email" },
-                { type: "email", message: "Email invalide" },
+                { required: true, message: "Please enter the email" },
+                { type: "email", message: "Invalid email" },
               ]}
             >
-              <AntInput placeholder="Entrez l'email" />
+              <AntInput placeholder="Enter email" />
             </Form.Item>
           </Col>
 
           <Col span={24}>
-            <Form.Item name="password" label="Mot de passe (optionnel)">
-              <AntInput.Password placeholder="Laissez vide pour ne pas changer" />
+            <Form.Item name="password" label="Password (optional)">
+              <AntInput.Password placeholder="Leave empty to keep current password" />
             </Form.Item>
           </Col>
         </Row>
 
         <div style={{ textAlign: 'right' }}>
           <Button onClick={onClose} style={{ marginRight: 8 }} disabled={loading}>
-            Annuler
+            Cancel
           </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Mettre à jour
+            Update
           </Button>
         </div>
       </Form>

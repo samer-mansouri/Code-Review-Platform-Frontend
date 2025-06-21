@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { Card, Descriptions, Tag, Typography, Spin, Button, Drawer, Form, Input, message } from "antd";
+import {
+  Card,
+  Descriptions,
+  Tag,
+  Typography,
+  Spin,
+  Button,
+  Drawer,
+  Form,
+  Input,
+  message,
+} from "antd";
 import { UserOutlined, MailOutlined } from "@ant-design/icons";
 import userDataService from "../../services/userDataService";
 
@@ -22,7 +33,7 @@ const UserProfile = () => {
     userDataService
       .getProfile()
       .then((res) => setProfile(res.user || res))
-      .catch((err) => console.error("Échec du chargement du profil", err))
+      .catch((err) => console.error("Failed to load profile", err))
       .finally(() => setLoading(false));
   };
 
@@ -34,7 +45,7 @@ const UserProfile = () => {
         localStorage.setItem("last_name", res.user.last_name);
       });
 
-      message.success("Profil mis à jour avec succès");
+      message.success("Profile updated successfully");
       setEditDrawerOpen(false);
       fetchProfile();
     } catch (error) {
@@ -46,7 +57,7 @@ const UserProfile = () => {
     try {
       const values = await pwdForm.validateFields();
       await userDataService.changePassword(values);
-      message.success("Mot de passe mis à jour avec succès");
+      message.success("Password updated successfully");
       setPasswordDrawerOpen(false);
       pwdForm.resetFields();
     } catch (error) {
@@ -65,22 +76,22 @@ const UserProfile = () => {
   return (
     <div className="p-6">
       <Title level={3} className="mb-4">
-        <UserOutlined /> Mon Profil
+        <UserOutlined /> My Profile
       </Title>
 
       <Card bordered size="small">
         <Descriptions column={1} size="middle">
-          <Descriptions.Item label="Prénom">
+          <Descriptions.Item label="First Name">
             {profile.first_name}
           </Descriptions.Item>
-          <Descriptions.Item label="Nom">
+          <Descriptions.Item label="Last Name">
             {profile.last_name}
           </Descriptions.Item>
           <Descriptions.Item label="Email">
             <MailOutlined style={{ marginRight: 8 }} />
             {profile.email}
           </Descriptions.Item>
-          <Descriptions.Item label="Rôle">
+          <Descriptions.Item label="Role">
             <Tag color={profile.role === "admin" ? "geekblue" : "green"}>
               {profile.role.toUpperCase()}
             </Tag>
@@ -89,17 +100,17 @@ const UserProfile = () => {
 
         <div className="mt-4 flex gap-2">
           <Button type="primary" onClick={() => setEditDrawerOpen(true)}>
-            Modifier le profil
+            Edit Profile
           </Button>
           <Button onClick={() => setPasswordDrawerOpen(true)}>
-            Changer le mot de passe
+            Change Password
           </Button>
         </div>
       </Card>
 
-      {/* Drawer modification profil */}
+      {/* Profile Edit Drawer */}
       <Drawer
-        title="Modifier le profil"
+        title="Edit Profile"
         placement="right"
         open={editDrawerOpen}
         onClose={() => setEditDrawerOpen(false)}
@@ -107,30 +118,30 @@ const UserProfile = () => {
       >
         <Form layout="vertical" form={form} initialValues={profile}>
           <Form.Item
-            label="Prénom"
+            label="First Name"
             name="first_name"
-            rules={[{ required: true, message: "Veuillez entrer votre prénom" }]}
+            rules={[{ required: true, message: "Please enter your first name" }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Nom"
+            label="Last Name"
             name="last_name"
-            rules={[{ required: true, message: "Veuillez entrer votre nom" }]}
+            rules={[{ required: true, message: "Please enter your last name" }]}
           >
             <Input />
           </Form.Item>
 
           <Button type="primary" onClick={handleProfileUpdate} block>
-            Enregistrer les modifications
+            Save Changes
           </Button>
         </Form>
       </Drawer>
 
-      {/* Drawer changement mot de passe */}
+      {/* Password Change Drawer */}
       <Drawer
-        title="Changer le mot de passe"
+        title="Change Password"
         placement="right"
         open={passwordDrawerOpen}
         onClose={() => setPasswordDrawerOpen(false)}
@@ -138,26 +149,26 @@ const UserProfile = () => {
       >
         <Form layout="vertical" form={pwdForm}>
           <Form.Item
-            label="Ancien mot de passe"
+            label="Old Password"
             name="old_password"
-            rules={[{ required: true, message: "Veuillez entrer votre ancien mot de passe" }]}
+            rules={[{ required: true, message: "Please enter your old password" }]}
           >
             <Input.Password />
           </Form.Item>
 
           <Form.Item
-            label="Nouveau mot de passe"
+            label="New Password"
             name="new_password"
             rules={[
-              { required: true, message: "Veuillez entrer votre nouveau mot de passe" },
-              { min: 6, message: "Minimum 6 caractères" },
+              { required: true, message: "Please enter your new password" },
+              { min: 6, message: "Minimum 6 characters" },
             ]}
           >
             <Input.Password />
           </Form.Item>
 
           <Button type="primary" onClick={handlePasswordChange} block>
-            Mettre à jour le mot de passe
+            Update Password
           </Button>
         </Form>
       </Drawer>

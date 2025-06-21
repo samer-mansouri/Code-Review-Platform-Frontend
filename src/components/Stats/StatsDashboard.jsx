@@ -40,8 +40,8 @@ const StatsDashboard = () => {
         setGhMonthly(ghMonthlyData);
         setGlMonthly(glMonthlyData);
       } catch (err) {
-        console.error("Erreur lors du chargement des statistiques:", err);
-        message.error("Échec du chargement des statistiques.");
+        console.error("Error loading statistics:", err);
+        message.error("Failed to load statistics.");
       } finally {
         setLoading(false);
       }
@@ -54,13 +54,13 @@ const StatsDashboard = () => {
     if (!source) return [];
 
     const base = [
-      { name: "Fusionné", value: source.merged ?? 0 },
-      { name: "Fermé", value: source.closed ?? 0 },
-      { name: "Ouvert", value: source.open ?? 0 },
+      { name: "Merged", value: source.merged ?? 0 },
+      { name: "Closed", value: source.closed ?? 0 },
+      { name: "Open", value: source.open ?? 0 },
     ];
 
     if (type === "gitlab" && source.conflict !== undefined) {
-      base.push({ name: "Conflit", value: source.conflict ?? 0 });
+      base.push({ name: "Conflict", value: source.conflict ?? 0 });
     }
 
     return base.filter(d => d.value > 0);
@@ -70,43 +70,41 @@ const StatsDashboard = () => {
 
   return (
     <>
-      <Title level={2} style={{ marginBottom: 24 }}>Statistiques</Title>
+      <Title level={2} style={{ marginBottom: 24 }}>Statistics</Title>
 
       <Row gutter={16}>
-        <Col span={6}><Card><Statistic title="Dépôts GitHub" value={overview.github.repo_count} /></Card></Col>
-        <Col span={6}><Card><Statistic title="PR GitHub" value={overview.github.pull_request_count} /></Card></Col>
-        <Col span={6}><Card><Statistic title="Projets GitLab" value={overview.gitlab.project_count} /></Card></Col>
-        <Col span={6}><Card><Statistic title="MR GitLab" value={overview.gitlab.merge_request_count} /></Card></Col>
+        <Col span={6}><Card><Statistic title="GitHub Repositories" value={overview.github.repo_count} /></Card></Col>
+        <Col span={6}><Card><Statistic title="GitHub PRs" value={overview.github.pull_request_count} /></Card></Col>
+        <Col span={6}><Card><Statistic title="GitLab Projects" value={overview.gitlab.project_count} /></Card></Col>
+        <Col span={6}><Card><Statistic title="GitLab MRs" value={overview.gitlab.merge_request_count} /></Card></Col>
       </Row>
 
       <Row gutter={16} style={{ marginTop: 32 }}>
         <Col span={12}>
-          <Card title="Répartition des PR GitHub" bodyStyle={{ display: 'flex', justifyContent: 'center' }}>
-           <PieChart width={400} height={320}>
- <Pie
-  data={formatPieData(ghRatio)}
-  dataKey="value"
-  nameKey="name"
-  cx="50%"
-  cy="50%"
-  outerRadius={100}
-  label={({ percent }) => `${(percent * 100).toFixed(0)}%`} // just % inside
-  labelLine={false} // disables long label lines
->
-  {formatPieData(ghRatio).map((_, index) => (
-    <Cell key={index} fill={COLORS[index % COLORS.length]} />
-  ))}
-</Pie>
-
-  <RechartsTooltip />
-  <Legend layout="horizontal" verticalAlign="bottom" />
-</PieChart>
-
+          <Card title="GitHub PR Distribution" bodyStyle={{ display: 'flex', justifyContent: 'center' }}>
+            <PieChart width={400} height={320}>
+              <Pie
+                data={formatPieData(ghRatio)}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                labelLine={false}
+              >
+                {formatPieData(ghRatio).map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <RechartsTooltip />
+              <Legend layout="horizontal" verticalAlign="bottom" />
+            </PieChart>
           </Card>
         </Col>
 
         <Col span={12}>
-          <Card title="Répartition des MR GitLab" bodyStyle={{ display: 'flex', justifyContent: 'center' }}>
+          <Card title="GitLab MR Distribution" bodyStyle={{ display: 'flex', justifyContent: 'center' }}>
             <PieChart width={350} height={300}>
               <Pie
                 data={formatPieData(glRatio, "gitlab")}
@@ -128,9 +126,11 @@ const StatsDashboard = () => {
         </Col>
       </Row>
 
-      {/* <Row gutter={16} style={{ marginTop: 32 }}>
+      {/* Uncomment the section below if you want to enable monthly line charts */}
+      {/* 
+      <Row gutter={16} style={{ marginTop: 32 }}>
         <Col span={12}>
-          <Card title="PR GitHub par mois">
+          <Card title="GitHub PRs per Month">
             <LineChart width={500} height={300} data={ghMonthly}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
@@ -143,7 +143,7 @@ const StatsDashboard = () => {
         </Col>
 
         <Col span={12}>
-          <Card title="MR GitLab par mois">
+          <Card title="GitLab MRs per Month">
             <LineChart width={500} height={300} data={glMonthly}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
@@ -154,7 +154,8 @@ const StatsDashboard = () => {
             </LineChart>
           </Card>
         </Col>
-      </Row> */}
+      </Row> 
+      */}
     </>
   );
 };

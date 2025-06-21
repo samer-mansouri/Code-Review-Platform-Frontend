@@ -28,7 +28,7 @@ const GitLabProjectsList = () => {
       const response = await gitlabProjectService.getAllProjects();
       setProjects(response);
     } catch (err) {
-      toast.error("Erreur lors du chargement des projets GitLab.");
+      toast.error("Error loading GitLab projects.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -50,9 +50,9 @@ const GitLabProjectsList = () => {
     setSyncing((prev) => ({ ...prev, [projectId]: true }));
     try {
       await gitlabProjectService.sync(projectId);
-      toast.success("Synchronisation terminée !");
+      toast.success("Sync completed!");
     } catch (err) {
-      toast.error("Échec de la synchronisation.");
+      toast.error("Sync failed.");
       console.error(err);
     } finally {
       setSyncing((prev) => ({ ...prev, [projectId]: false }));
@@ -62,10 +62,10 @@ const GitLabProjectsList = () => {
   const handleDelete = async (projectId) => {
     try {
       await gitlabProjectService.delete(projectId);
-      toast.success("Projet supprimé avec succès");
+      toast.success("Project deleted successfully");
       setProjects((prev) => prev.filter((proj) => proj.id !== projectId));
     } catch (err) {
-      toast.error("Erreur lors de la suppression du projet");
+      toast.error("Error while deleting the project");
       console.error(err);
     }
   };
@@ -78,7 +78,7 @@ const GitLabProjectsList = () => {
 
   const columns = [
     {
-      title: "Nom",
+      title: "Name",
       dataIndex: "name",
       key: "name",
       render: (text, record) => (
@@ -107,7 +107,7 @@ const GitLabProjectsList = () => {
       ),
     },
     {
-      title: "Créé le",
+      title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => new Date(date).toLocaleString(),
@@ -135,17 +135,17 @@ const GitLabProjectsList = () => {
             icon={<EyeOutlined />}
             onClick={() => navigate(`/gitlab/projects/${record.id}`)}
           >
-            Voir
+            View
           </Button>
           <Popconfirm
-            title="Confirmer la suppression ?"
-            description="Ce projet et toutes ses données associées seront supprimés."
+            title="Confirm deletion?"
+            description="This project and all its associated data will be deleted."
             onConfirm={() => handleDelete(record.id)}
-            okText="Oui"
-            cancelText="Non"
+            okText="Yes"
+            cancelText="No"
           >
             <Button danger icon={<DeleteOutlined />}>
-              Supprimer
+              Delete
             </Button>
           </Popconfirm>
         </div>
@@ -161,18 +161,18 @@ const GitLabProjectsList = () => {
         </div>
       )}
 
-      <h1 className="text-lg font-semibold mb-4">Projets GitLab</h1>
+      <h1 className="text-lg font-semibold mb-4">GitLab Projects</h1>
 
       <div className="flex justify-between items-center mb-4">
         <Input
-          placeholder="Rechercher un projet..."
+          placeholder="Search for a project..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ width: 300 }}
           prefix={<SearchOutlined />}
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={openDrawer}>
-          Ajouter un projet
+          Add Project
         </Button>
       </div>
 
