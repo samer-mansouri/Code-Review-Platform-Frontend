@@ -67,7 +67,7 @@ const UsersList = () => {
       content: `Developer: ${record.first_name} ${record.last_name}`,
       icon: <DeleteOutlined style={{ color: 'red' }} />,
       onOk() {
-        usersService.delete(record.id)
+        usersService.remove(record.id)
           .then(() => {
             const updatedData = data.filter(user => user.id !== record.id);
             setData(updatedData);

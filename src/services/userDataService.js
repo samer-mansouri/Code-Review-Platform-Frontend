@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import uploadFileAxiosInstance from "./uploadFileAxiosInstance";
 
 const userDataService = {
   // Fetch current user data
@@ -16,7 +17,10 @@ const userDataService = {
   // Update user profile (first name, last name, etc.)
   updateProfile: async (data) => {
     try {
-      const response = await axiosInstance.put("/api/auth/update-profile", data);
+      const response = await axiosInstance.put(
+        "/api/auth/update-profile",
+        data
+      );
       return response.data;
     } catch (error) {
       return Promise.reject(
@@ -36,6 +40,23 @@ const userDataService = {
     } catch (error) {
       return Promise.reject(
         error.response?.data?.error || "Failed to change password"
+      );
+    }
+  },
+
+  updateProfilePicture: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await uploadFileAxiosInstance.put(
+        "/api/auth/update-profile-picture",
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      return Promise.reject(
+        error.response?.data?.error || "Failed to update profile picture"
       );
     }
   },

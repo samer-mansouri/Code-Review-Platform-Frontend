@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu } from 'antd';
 // import logo from '../assets/logo-white.png';
 // import profilePic from '../assets/profile-pic.webp';
@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import avatar from '../assets/avatar.png';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { UserContext } from "../contexts/UserContext";
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -20,6 +21,13 @@ const MainLayout = ({ children }) => {
   const [breadCrumb, setBreadCrumb] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { user } = useContext(UserContext);
+  const fullName = user?.first_name && user?.last_name
+    ? `${user.first_name} ${user.last_name}`
+    : "User";
+
+  const profilePicture = user?.profile_picture || avatar;
 
   const extractBreadCrumb = (menuItems) => {
     const path = window.location.pathname;
@@ -92,14 +100,9 @@ const MainLayout = ({ children }) => {
             trigger={['click']}
           >
             <div className="flex items-center space-x-2 cursor-pointer">
-              <Avatar src={avatar} className="ml-auto" />
+              <Avatar src={profilePicture} className="ml-auto" />
               <div className="text-white text-sm">
-                {localStorage.getItem('first_name') &&
-                localStorage.getItem('last_name')
-                  ? localStorage.getItem('first_name') +
-                    ' ' +
-                    localStorage.getItem('last_name')
-                  : 'User'}
+                <div className="text-white text-sm">{fullName}</div>
               </div>
             </div>
           </Dropdown>

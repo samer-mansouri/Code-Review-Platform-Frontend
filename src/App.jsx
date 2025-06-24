@@ -8,6 +8,8 @@ import { protectedRoutes } from "./routes/routeConfig";
 import RoleGuard from "./guards/RoleGuard";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import { ToastContainer } from "react-toastify";
+import RequestResetPage from "./pages/RequestResetPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const App = () => {
   return (
@@ -28,6 +30,24 @@ const App = () => {
             element={
               <PublicRoute>
                 <RegisterPage />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/request-reset"
+            element={
+              <PublicRoute>
+                <RequestResetPage />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/reset/:token"
+            element={
+              <PublicRoute>
+                <ResetPasswordPage />
               </PublicRoute>
             }
           />

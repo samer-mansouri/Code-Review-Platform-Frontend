@@ -1,12 +1,14 @@
 import { Form, Input, Button, Card } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import authService from "../services/authService";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const onFinish = (values) => {
     setLoading(true);
@@ -15,7 +17,6 @@ const LoginPage = () => {
       .then((response) => {
         const { user } = response;
 
-        // Store in localStorage
         localStorage.setItem("access", response.access_token);
         localStorage.setItem("refresh", response.refresh_token);
         localStorage.setItem("first_name", user.first_name);
@@ -23,8 +24,14 @@ const LoginPage = () => {
         localStorage.setItem("email", user.email);
         localStorage.setItem("id", user.id);
         localStorage.setItem("role", user.role);
+        localStorage.setItem("profile_picture", user.profile_picture || "");
 
-        // Redirect based on role
+        setUser({
+          first_name: user.first_name,
+          last_name: user.last_name,
+          profile_picture: user.profile_picture || "",
+        });
+
         if (user.role === "developer") {
           navigate("/tokens");
         } else if (user.role === "admin") {
@@ -83,6 +90,10 @@ const LoginPage = () => {
               Log In
             </Button>
           </Form.Item>
+
+          <div className="text-right">
+            <Link to="/request-reset">Forgot your password?</Link>
+          </div>
         </Form>
 
         <p className="text-center mt-4">
